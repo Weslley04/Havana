@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>É O ROCK BB!</title>
+</head>
+
+<body>
+    <h1>É O ROCK BB!</h1>
+
+    <form id="rockBandForm">
+        <label for="genreSelect">Escolha um Gênero de Rock:</label>
+        <select id="genreSelect" name="genreSelect" onchange="atualizarSelectBanda()">
+            <option value="classic">Rock Clássico</option>
+            <option value="punk">Punk Rock</option>
+            <option value="metal">Heavy Metal</option>
+        </select>
+
+        <label for="bandSelect">Escolha uma Banda:</label>
+        <select id="bandSelect" name="bandSelect"></select>
+
+        <input type="text" id="textInput" name="textInput" placeholder="Digite algo aqui">
+
+        <button type="button" onclick="enviarFormulario()">Enviar</button>
+    </form>
+
+    <div id="historicoBandas">
+        <h2>Histórico de Bandas Selecionadas</h2>
+        <ul id="listaBandas"></ul>
+    </div>
+
+    <script>
+        const historicoBandas = [];
+
+        const dadosBandas = {
+            classic: ["Led Zeppelin", "The Beatles", "Pink Floyd"],
+            punk: ["The Ramones", "The Clash", "Sex Pistols"],
+            metal: ["Metallica", "Iron Maiden", "Black Sabbath"]
+        };
+
+        function atualizarSelectBanda() {
+            const genreSelect = document.getElementById('genreSelect');
+            const bandSelect = document.getElementById('bandSelect');
+            const generoSelecionado = genreSelect.value;
+
+            bandSelect.innerHTML = '';
+
+            dadosBandas[generoSelecionado].forEach(function (banda) {
+                const option = document.createElement('option');
+                option.value = banda;
+                option.textContent = banda;
+                bandSelect.appendChild(option);
+            });
+        }
+
+        function enviarFormulario() {
+            const genero = document.getElementById('genreSelect').value;
+            const banda = document.getElementById('bandSelect').value;
+            const texto = document.getElementById('textInput').value;
+
+            const informacoesBanda = `Gênero de Rock: ${genero}, Banda: ${banda}, Texto digitado: ${texto}`;
+            historicoBandas.push(informacoesBanda);
+
+            atualizarListaBandas();
+        }
+
+        function atualizarListaBandas() {
+            const listaBandas = document.getElementById('listaBandas');
+            listaBandas.innerHTML = '';
+
+            for (let i = 0; i < historicoBandas.length; i++) {
+                const listItem = document.createElement('li');
+                listItem.textContent = historicoBandas[i];
+
+                const botaoEditar = document.createElement('button');
+                botaoEditar.textContent = 'Editar';
+                botaoEditar.addEventListener('click', () => editarBanda(i));
+
+                const botaoExcluir = document.createElement('button');
+                botaoExcluir.textContent = 'Excluir';
+                botaoExcluir.addEventListener('click', () => excluirBanda(i));
+
+                listItem.appendChild(botaoEditar);
+                listItem.appendChild(botaoExcluir);
+                listaBandas.appendChild(listItem);
+            }
+        }
+
+        function editarBanda(indice) {
+            const informacoesEditadas = prompt('Editar informações da banda:', historicoBandas[indice]);
+            if (informacoesEditadas !== null) {
+                historicoBandas[indice] = informacoesEditadas;
+                atualizarListaBandas();
+            }
+        }
+
+        function excluirBanda(indice) {
+            if (confirm('Tem certeza que deseja excluir esta banda?')) {
+                historicoBandas.splice(indice, 1);
+                atualizarListaBandas();
+            }
+        }
+    </script>
+</body>
+
+</html>
